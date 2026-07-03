@@ -28,8 +28,8 @@ end
 --- @param module Module
 return function(module)
     module:setCategory("izum-test")
-    module:registerCommand("izum:demo", demoCommand)
-    module:registerCommand("izum:logger", toggleLogger)
+    module:registerCommand("izum:demo", demoCommand, "Возвращает использованные с командой аргументы")
+    module:registerCommand("izum:logger", toggleLogger, "Переключает оповещение \"Текст изменён в поле\"")
     module:registerWatcher(logger, inline.TYPE_TEXT_CHANGED)
     inline:toast("izum: модуль загружен")
 end

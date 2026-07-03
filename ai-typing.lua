@@ -1,4 +1,4 @@
----@meta typing
+---@meta ai-typing
 -- using [VSCode with Lua extension](https://luals.github.io/)
 
 -- неизвестно, по возможности - не трогать

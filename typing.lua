@@ -9,39 +9,32 @@
 ---@alias CommandFinders LuaValue[] -- array of finder functions/values
 
 ---@class (exact) AccessibilityNodeInfo
--- Объект запроса
--- Позволяет выводить результат выполнения команды, а также хранит аргументы и текст поля ввода.
 
--- local function democmd(_, query)
---     local args = query:getArgs() -- аргумент
---     query:answer("Вызов команды с аргументом " .. args)
--- end
-
--- return function(module)
---     module:registerCommand("demo", democmd)
--- end
-
--- Объект запроса
--- #region -Query
+--- #region -Query
 ---@class (exact) Query
+--- Позволяет выводить результат выполнения команды, а также хранит аргументы и текст поля ввода.
+--- ```lua
+--- local function democmd(_, query)
+---     local args = query:getArgs() -- аргумент
+---     query:answer("Вызов команды с аргументом " .. args)
+--- end
+--- return function(module)
+---     module:registerCommand("demo", democmd)
+--- end
+--- ```
 ---@field getText fun(this: Query): string # Получить текущую строку поля ввода.
 ---@field getExpression fun(this: Query): string # Получить строку выражения вызова команды.
 ---@field getArgs fun(this: Query): string # Получить строку аргумента команды.
 ---@field getAccessibilityNodeInfo fun(this: Query): AccessibilityNodeInfo # AccessibilityNodeInfo - Получить информацию о ноде поля ввода.
 ---@field replaceExpression fun(this: Query, string): string # Возвращает полную исходную строку поля ввода, где выражение вызова команды (expression) заменено на replacementText. Важно: Этот метод не изменяет поле ввода сам по себе, он лишь возвращает измененную строку.
 ---@field answer fun(this: Query, text: string | ""): string # Устанавливает текст в поле ввода заместо вызова команды.
--- Методы объекта запроса
--- query:getText() -> string - Получить текущую строку поля ввода.
--- query:getExpression() -> string - Получить строку выражения вызова команды.
--- query:getArgs() -> string - Получить строку аргумента команды.
--- query:getAccessibilityNodeInfo() -> AccessibilityNodeInfo - Получить информацию о ноде поля ввода.
--- query:replaceExpression(string) -> string - Возвращает полную исходную строку поля ввода, где выражение вызова команды (expression) заменено на replacementText. Важно: Этот метод не изменяет поле ввода сам по себе, он лишь возвращает измененную строку.
--- query:answer(text = "") - Устанавливает текст в поле ввода заместо вызова команды.
 -- #endregion Query
 -- #region -Inline
 -- Инструменты работы с полями ввода
 ---@class (exact) Inline
----@field TYPE_TEXT_CHANGED any # enumerator ig
+---@field TYPE_TEXT_CHANGED any # при изменении текста в поле ввода. 
+---@field TYPE_SELECTION_CHANGED integer # при изменении позиции курсора в поле ввода. 
+---@field TYPE_ALL_MASK integer # все события, перечисленные выше.
 ---@field setText fun(this: Inline, node: AccessibilityNodeInfo, text: string): string|nil # Устанавливает текст в переданной AccessibilityNodeInfo. (заметка @alekzum: Возвращаемое значение неизвестно, мб `string` по подобию `inline:answer`, мб `nil` по иной логике)
 ---@field getText fun(this: Inline, node: AccessibilityNodeInfo): string # Получить текст из переданной AccessibilityNodeInfo
 ---@field setSelection fun(this: Inline, start: integer, end: integer): nil # Устанавливает позицию курсора в переданной AccessibilityNodeInfo
@@ -49,14 +42,6 @@
 ---@field copy fun(this: Inline, node: AccessibilityNodeInfo): nil # Копирует текст в буфер обмена в переданной AccessibilityNodeInfo.
 ---@field paste fun(this: Inline, node: AccessibilityNodeInfo): nil # Вставляет текст из буфера обмена в переданной AccessibilityNodeInfo.
 ---@field insertText fun(this: Inline, node: AccessibilityNodeInfo, text: string): nil # Вставить текст заместо курсора в переданной AccessibilityNodeInfo.
--- Инструменты работы с полями ввода
--- inline:setText(node, text) - Устанавливает текст в переданной AccessibilityNodeInfo.
--- inline:getText(node) - Получить текст из переданной AccessibilityNodeInfo.
--- inline:setSelection(node, start, end) - Устанавливает позицию курсора в переданной AccessibilityNodeInfo.
--- inline:cut(node) - Вырезает текст в буфер обмена в переданной AccessibilityNodeInfo.
--- inline:copy(node) - Копирует текст в буфер обмена в переданной AccessibilityNodeInfo.
--- inline:paste(node) - Вставляет текст из буфера обмена в переданной AccessibilityNodeInfo.
--- inline:insertText(node, text) - Вставить текст заместо курсора в переданной AccessibilityNodeInfo.
 -- #region other
 -- Прочее
 ---@field toast fun(this: Inline, string: string): nil # Выводит сообщение на экран пользователю
@@ -71,17 +56,6 @@
 ---@field getAllCommandFinders fun(this: Inline): CommandFinders # Возвращает все зарегистрированные функции поиска команд.
 --#endregion other
 --#endregion Inline
--- Прочее
--- inline:toast(string) - Выводит сообщение на экран пользователю.
--- inline:timerTask(function) - Создает объект java.util.TimerTask из Lua-функции.
--- inline:getTimer() -> Timer - Возвращает java.util.Timer для планирования задач TimerTask.
--- inline:getSharedPreferences(name) - Возвращает SharedPreferences по названию.
--- inline:getDefaultSharedPreferences() - Возвращает SharedPreferences по умолчанию.
--- inline:getLoadedModules() -> HashMap<String, Module> - Возвращает загруженные модули (ключ — путь к файлу, значение — объект Module).
--- inline:getAllCommands() -> HashMap<String, Command> - Возвращает все зарегистрированные команды (ключ — имя команды).
--- inline:getAllWatchers() -> HashMap<LuaValue, Int> - Возвращает всех зарегистрированных наблюдателей (ключ — функция, значение — маска событий).
--- inline:getAllPreferences() -> HashMap<String, HashSet<PreferencesItem>> - Возвращает все зарегистрированные предпочтения (ключ — категория).
--- inline:getAllCommandFinders() -> HashSet<LuaValue> - Возвращает все зарегистрированные функции поиска команд.
 
 -- #region -Module
 -- Методы модулей
@@ -99,20 +73,7 @@
 ---@field unregisterCommandFinder fun(this: Module, function: function) - Отменяет регистрацию поиска команд по функции.
 ---@field unload fun(this: Module) - Отменяет регистрации модуля.
 ---@field saveLazyLoad fun(this: Module) - Сохраняет кэш ленивой загрузки, позволяет загрузить модуль только при вызове одной из команд модуля.
--- Методы модулей
--- module:setCategory(name) - Указывает категорию, которая будет применяться к следующим регистрациям команд и предпочтений.
--- module:getCategory() -> string - Получить текущее название категории.
--- module:getFilepath() -> string - Получить путь к модулю.
--- module:registerCommand(name, function [, description]) - Регистрирует новую команду (см. раздел "Команды").
--- module:registerWatcher(function, mask = inline.TYPE_TEXT_CHANGED) - Регистрирует новый наблюдатель для указанного типа событий (см. раздел "Наблюдатели").
--- module:registerCommandFinder(function) - Регистрирует поиск команд.
--- module:registerPreferences(sharedPreferences, function) - Регистрирует каталог предпочтений с указанными SharedPreferences.
--- module:registerPreferences(function) - Регистрирует каталог предпочтений.
--- module:unregisterCommand(name) - Отменяет регистрацию команды по имени. Полезно для динамического управления командами модуля.
--- module:unregisterWatcher(function) - Отменяет регистрацию наблюдателя (требуется ссылка на ту же функцию, что была передана при регистрации).
--- module:unregisterCommandFinder(function) - Отменяет регистрацию поиска команд по функции.
--- module:unload() - Отменяет регистрации модуля.
--- module:saveLazyLoad() - Сохраняет кэш ленивой загрузки, позволяет загрузить модуль только при вызове одной из команд модуля.
+
 -- Предпочтения пользователя
 -- Inline позволяет создавать два типа UI: страницы настроек (Предпочтения) и Плавающие окна. Оба используют один и тот же набор элементов интерфейса, создаваемых через таблицу-строитель.
 
