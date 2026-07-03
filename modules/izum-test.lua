@@ -1,24 +1,35 @@
+---@module 'typing'
+---@cast module Module
+---@cast inline Inline
+
+
 loggerEnabled = false
 
+--- @param query Query
 local function demoCommand(_, query)
     local args = query:getArgs() -- аргументы
     query:answer("Вызов команды с аргументами (" .. args .. ")")
 end
 
+--- @param query Query
 local function toggleLogger(_, query)
-    loggerEnabled = ~loggerEnabled
+    loggerEnabled = 1 - loggerEnabled
     -- local args = query:getArgs() -- аргументы
     query:answer("Состояние логгера на изменения текста: " .. loggerEnabled)
 end
 
 local function logger(input)
-    local text = inline:getText(input)
-    inline:toast("Текст изменен в поле: " .. text)
+    if loggerEnabled then
+        local text = inline:getText(input)
+        inline:toast("izum: Текст изменен в поле: " .. text)
+    end
 end
 
+--- @param module Module
 return function(module)
-    module:registerCommand("izum:demo", demoCommand)
-    module:registerCommand("izum:logger", toggleLogger)
+    module:setCategory("izum-test")
+    module:registerCommand("izum:demo", demoCommand, "Возвращает использованные с командой аргументы")
+    module:registerCommand("izum:logger", toggleLogger, "Переключает оповещение \"Текст изменён в поле\"")
     module:registerWatcher(logger, inline.TYPE_TEXT_CHANGED)
-    inline:toast("модуль изюма включен")
+    inline:toast("izum: модуль загружен")
 end
