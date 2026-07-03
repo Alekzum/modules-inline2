@@ -1,10 +1,6 @@
 ---@module 'typing'
-
----@type Module
-local module
-
----@type Inline
-local inline
+---@cast module Module
+---@cast inline Inline
 
 
 loggerEnabled = false
