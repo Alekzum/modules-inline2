@@ -26,8 +26,10 @@ local function toggleLogger(_, query)
 end
 
 local function logger(input)
-    local text = inline:getText(input)
-    inline:toast("izum: Текст изменен в поле: " .. text)
+    if loggerEnabled then
+        local text = inline:getText(input)
+        inline:toast("izum: Текст изменен в поле: " .. text)
+    end
 end
 
 return function(module)
