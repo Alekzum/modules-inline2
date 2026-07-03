@@ -6,13 +6,6 @@
 loggerEnabled = false
 
 --- @param query Query
-local function removeThisModuleCommand(_, query)
-    local args = query:getArgs() -- аргументы
-    inline:toast("izum: Разружается модуль")
-    module:unload()
-end
-
---- @param query Query
 local function demoCommand(_, query)
     local args = query:getArgs() -- аргументы
     query:answer("Вызов команды с аргументами (" .. args .. ")")
@@ -32,10 +25,11 @@ local function logger(input)
     end
 end
 
+--- @param module Module
 return function(module)
+    module:setCategory("izum-test")
     module:registerCommand("izum:demo", demoCommand)
     module:registerCommand("izum:logger", toggleLogger)
-    module:registerCommand("izum:fucku", removeThisModuleCommand)
     module:registerWatcher(logger, inline.TYPE_TEXT_CHANGED)
     inline:toast("izum: модуль загружен")
 end
