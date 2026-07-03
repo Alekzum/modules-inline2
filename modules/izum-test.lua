@@ -24,7 +24,7 @@ end
 
 --- @param query Query
 local function toggleLogger(_, query)
-    loggerEnabled = ~loggerEnabled
+    loggerEnabled = 1 - loggerEnabled
     -- local args = query:getArgs() -- аргументы
     query:answer("Состояние логгера на изменения текста: " .. loggerEnabled)
 end
